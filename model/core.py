@@ -5,7 +5,8 @@ import tempfile
 import numpy as np
 from typing import Generator, Optional
 from huggingface_hub import snapshot_download
-from .model.voxcpm import VoxCPMModel, LoRAConfig
+from model.dit import AceStepConditionGenerationModel
+from safetensors.torch import load_file, save_file
 
 class MY_TTS:
     def __init__(self,
@@ -36,9 +37,9 @@ class MY_TTS:
         #         enable_proj=False,
         #     )
         #     print(f"Auto-created default LoRAConfig for loading weights from: {lora_weights_path}", file=sys.stderr)
-        self.llm_model = NULL   
-        self.llm_residual = NULL
-        self.tts_model = VoxCPMModel.from_local(voxcpm_model_path, optimize=optimize, lora_config=lora_config)
+        self.llm_model = load_file("assets/llm_model.safetensors")   
+        self.llm_residual = load_file("assets/llm_residual.safetensors")
+        self.tts_model = AceStepConditionGenerationModel.from_local(voxcpm_model_path, optimize=optimize, lora_config=lora_config)
         
         # # Load LoRA weights if path is provided
         # if lora_weights_path is not None:
